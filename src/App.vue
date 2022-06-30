@@ -3,9 +3,12 @@ import { ref, onMounted, computed, watch } from "vue";
 
 const meds = ref([]);
 const patient_name = ref("");
+const meds_filtered = ref([]);
 
 const input_medicine = ref("");
-const input_timing = ref(null);
+const input_timing = ref([]);
+
+const add_modal_isOpen = ref(false);
 
 const meds_sortasc = computed(() =>
   meds.value.sort((a, b) => {
@@ -27,7 +30,7 @@ watch(
 );
 
 const addMed = () => {
-  if (input_medicine.value.trim() === "" || input_timing.value === null) {
+  if (input_medicine.value.trim() === "" || input_timing.value === []) {
     return;
   }
 
@@ -39,7 +42,7 @@ const addMed = () => {
   });
 
   input_medicine.value = "";
-  input_timing.value = null;
+  input_timing.value = [];
 };
 
 const removeMed = med => {
@@ -48,188 +51,156 @@ const removeMed = med => {
 
 onMounted(() => {
   patient_name.value = JSON.parse(localStorage.getItem("patient_name")) || "";
-  meds.value = JSON.parse(localStorage.getItem("meds")) || [];
+  meds.value = JSON.parse(localStorage.getItem("meds")) || {};
 });
 </script>
 
+<script>
+import MedItem from './components/medItem.vue';
+import scheduleBox from "./components/scheduleBlock.vue";
+
+export default {
+  name: 'App',
+  components: {
+    MedItem,
+    scheduleBox,
+  }
+}
+</script>
+
 <template>
-  <div class="px-4 py-6">
-    <section class="flex mb-4 header">
-      <div class="flex flex-col left-section">
+  <div class="relative px-4 py-6">
+    <section class="flex mb-4 space-x-4 header">
+      <div class="flex flex-col w-full left-section">
         <span class="text-xl text-slate-800">Medication Schedule for</span>
-        <input
-          type="text"
-          placeholder="Name here"
-          v-model="patient_name"
-          class="text-3xl font-medium capitalize bg-transparent focus:outline-1 focus:outline-yellow-400"
-        />
+        <input type="text" placeholder="Name here" v-model="patient_name"
+          class="text-3xl font-medium capitalize bg-transparent focus:outline-1 focus:outline-yellow-400" />
       </div>
-      <div class="right-section"></div>
+      <div class="flex h-fit right-section">
+        <button @click="add_modal_isOpen = true" class="add-medicine">
+          + Add
+        </button>
+      </div>
     </section>
-    <section class="p-4 rounded-lg add-med bg-sky-100">
-      <form @submit.prevent="addMed">
+    <section
+      :class="`fixed top-0 left-0 w-full overflow-hidden flex items-center bg-slate-900 bg-opacity-90 ${add_modal_isOpen ? 'h-screen p-8' : 'h-0'}`">
+      <button @click="add_modal_isOpen = false" class="absolute add-medicine top-4 right-4">X</button>
+      <form @submit.prevent="addMed" class="p-4 rounded-lg add-med bg-sky-100">
         <h4>What's the medicine you need to drink?</h4>
-        <input
-          type="text"
-          placeholder="e.g Paracetamol 500mg"
-          v-model="input_medicine"
-          class="w-full px-4 py-2 mb-4 rounded-lg"
-        />
+        <input type="text" placeholder="e.g Paracetamol 500mg" v-model="input_medicine"
+          class="w-full px-4 py-2 mb-4 rounded-lg" />
         <h4>When do you need to drink the medicine?</h4>
         <div class="options">
           <label>
-            <input
-              type="radio"
-              name="drinkTime"
-              id="MorBef"
-              value="Morning-Before"
-              v-model="input_timing"
-            />
+            <input type="checkbox" id="MorBef" value="1B" v-model="input_timing" />
             <span class="checkbox-icon"></span>
             <span class="labels">Morning, Before Eat</span>
           </label>
 
           <label>
-            <input
-              type="radio"
-              name="drinkTime"
-              id="MorAft"
-              value="Morning-After"
-              v-model="input_timing"
-            />
+            <input type="checkbox" id="MorAft" value="1A" v-model="input_timing" />
             <span class="checkbox-icon"></span>
             <span class="labels">Morning, After Eat</span>
           </label>
 
           <label>
-            <input
-              type="radio"
-              name="drinkTime"
-              id="NooBef"
-              value="Noon-Before"
-              v-model="input_timing"
-            />
+            <input type="checkbox" id="NooBef" value="2B" v-model="input_timing" />
             <span class="checkbox-icon"></span>
             <span class="labels">Noon, Before Eat</span>
           </label>
 
           <label>
-            <input
-              type="radio"
-              name="drinkTime"
-              id="NooAft"
-              value="Noon-After"
-              v-model="input_timing"
-            />
+            <input type="checkbox" id="NooAft" value="2A" v-model="input_timing" />
             <span class="checkbox-icon"></span>
             <span class="labels">Noon, After Eat</span>
           </label>
 
           <label>
-            <input
-              type="radio"
-              name="drinkTime"
-              id="EveBef"
-              value="Evening-Before"
-              v-model="input_timing"
-            />
+            <input type="checkbox" id="EveBef" value="3B" v-model="input_timing" />
             <span class="checkbox-icon"></span>
             <span class="labels">Evening, Before Eat</span>
           </label>
 
           <label>
-            <input
-              type="radio"
-              name="drinkTime"
-              id="EveAft"
-              value="Evening-After"
-              v-model="input_timing"
-            />
+            <input type="checkbox" id="EveAft" value="3A" v-model="input_timing" />
             <span class="checkbox-icon"></span>
             <span class="labels">Evening, After Eat</span>
           </label>
 
           <label>
-            <input
-              type="radio"
-              name="drinkTime"
-              id="Night"
-              value="Night"
-              v-model="input_timing"
-            />
+            <input type="checkbox" id="Night" value="4" v-model="input_timing" />
             <span class="checkbox-icon"></span>
             <span class="labels">Night, Before You Sleep</span>
           </label>
 
           <label>
-            <input
-              type="radio"
-              name="drinkTime"
-              id="O-w-n"
-              value="Only-When-Needed"
-              v-model="input_timing"
-            />
+            <input type="checkbox" id="O-w-n" value="5" v-model="input_timing" />
             <span class="checkbox-icon"></span>
             <span class="labels">Only When Needed</span>
           </label>
         </div>
 
-        <input
-          type="submit"
-          value="add medicine"
-          class="w-full p-4 my-4 font-medium text-center text-white capitalize bg-indigo-600 rounded-lg hover:opacity-75"
-        />
+        <input type="submit" @click="add_modal_isOpen = false" value="add medicine"
+          class="w-full p-4 my-4 font-medium text-center text-white capitalize bg-indigo-600 rounded-lg hover:opacity-75" />
       </form>
     </section>
     <div class="py-4 meds-items">
-      <div
-        v-for="medic in meds_sortasc"
-        :class="`meds-item ${medic.done && 'done'}`"
-        :key="{ medic }"
-      >
-        <label>
-          <input type="checkbox" v-model="medic.done" />
-          <span :class="`checkbox-icon ${medic.done ? 'cleared' : ''}`"></span>
-        </label>
-
-        <div class="meds-title">
-          <!-- <input type="text" v-model="medic.content" /> -->
-          {{ medic.content + " --- "+ medic.timing }}
-        </div>
-        <div class="actions">
-          <button class="delete" @click="removeMed(medic)">Delete</button>
-        </div>
-      </div>
+      <MedItem v-for="medic in meds_sortasc" :key="{ medic }" :done="medic.done" :content="medic.content"
+        :timing="medic.timing" @deleteItem="removeMed(medic)" />
     </div>
 
     <section class="meds-list">
-      <h3>Medication Schedule</h3>
+      <h3 class="mb-2 text-xl font-bold text-center">Medication Schedule</h3>
       <div class="daily-calendar">
-        <div class="grid grid-cols-2 gap-2">
-          <div class="calendar-block">
-            <div class="calendar-title">Morning, Before Eat</div>
-          </div>
-          <div class="calendar-block">
-            <div class="calendar-title">Morning, After Eat</div>
-          </div>
-          <div class="calendar-block">
-            <div class="calendar-title">Noon, Before Eat</div>
-          </div>
-          <div class="calendar-block">
-            <div class="calendar-title">Noon, After Eat</div>
-          </div>
-          <div class="calendar-block">
-            <div class="calendar-title">Evening, Before Eat</div>
-          </div>
-          <div class="calendar-block">
-            <div class="calendar-title">Evening, After Eat</div>
-          </div>
-          <div class="calendar-block">
-            <div class="calendar-title">Night</div>
-          </div>
-          <div class="calendar-block">
-            <div class="calendar-title">Only When Needed</div>
-          </div>
+        <div class="grid gap-4 md:grid-cols-2">
+          <scheduleBox title="Morning, Before Eat">
+            <template v-slot:scheduleList>
+              <MedItem v-for="medic in meds_sortasc" :key="{ medic }" :done="medic.done" :content="medic.content"
+                :timing="medic.timing" @deleteItem="removeMed(medic)" />
+            </template>
+          </scheduleBox>
+          <scheduleBox title="Morning, After Eat">
+            <template v-slot:scheduleList>
+              <MedItem v-for="medic in meds_sortasc" :key="{ medic }" :done="medic.done" :content="medic.content"
+                :timing="medic.timing" @deleteItem="removeMed(medic)" />
+            </template>
+          </scheduleBox>
+          <scheduleBox title="Noon, Before Eat">
+            <template v-slot:scheduleList>
+              <MedItem v-for="medic in meds_sortasc" :key="{ medic }" :done="medic.done" :content="medic.content"
+                :timing="medic.timing" @deleteItem="removeMed(medic)" />
+            </template>
+          </scheduleBox>
+          <scheduleBox title="Noon, After Eat">
+            <template v-slot:scheduleList>
+              <MedItem v-for="medic in meds_sortasc" :key="{ medic }" :done="medic.done" :content="medic.content"
+                :timing="medic.timing" @deleteItem="removeMed(medic)" />
+            </template>
+          </scheduleBox>
+          <scheduleBox title="Evening, Before Eat">
+            <template v-slot:scheduleList>
+              <MedItem v-for="medic in meds_sortasc" :key="{ medic }" :done="medic.done" :content="medic.content"
+                :timing="medic.timing" @deleteItem="removeMed(medic)" />
+            </template>
+          </scheduleBox>
+          <scheduleBox title="Evening, After Eat">
+            <template v-slot:scheduleList>
+              <MedItem v-for="medic in meds_sortasc" :key="{ medic }" :done="medic.done" :content="medic.content"
+                :timing="medic.timing" @deleteItem="removeMed(medic)" />
+            </template>
+          </scheduleBox>
+          <scheduleBox title="Bight, Before You Sleep">
+            <template v-slot:scheduleList>
+              <MedItem v-for="medic in meds_sortasc" :key="{ medic }" :done="medic.done" :content="medic.content"
+                :timing="medic.timing" @deleteItem="removeMed(medic)" />
+            </template>
+          </scheduleBox>
+          <scheduleBox title="Only When Needed">
+            <template v-slot:scheduleList>
+              <MedItem v-for="medic in meds_sortasc" :key="{ medic }" :done="medic.done" :content="medic.content"
+                :timing="medic.timing" @deleteItem="removeMed(medic)" />
+            </template>
+          </scheduleBox>
         </div>
       </div>
     </section>
@@ -237,6 +208,10 @@ onMounted(() => {
 </template>
 
 <style lang="postcss" scoped>
+.add-medicine {
+  @apply px-4 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:opacity-75 whitespace-nowrap;
+}
+
 .add-med h4 {
   font-size: 1.125em;
   margin-bottom: 4px;
@@ -260,7 +235,7 @@ input[type="checkbox"] {
   @apply bg-indigo-600 rounded-full w-0 h-0 opacity-0 block;
 }
 
-input:checked ~ .checkbox-icon::after {
+input:checked~.checkbox-icon::after {
   width: 10px;
   height: 10px;
   opacity: 1;
@@ -272,10 +247,6 @@ input:checked ~ .checkbox-icon::after {
 
 .options .labels {
   @apply text-sm;
-}
-
-.calendar-block {
-  @apply w-full h-40 rounded-lg bg-amber-100 px-4 py-2;
 }
 
 .meds-item {
