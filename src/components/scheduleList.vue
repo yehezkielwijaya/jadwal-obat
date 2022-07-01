@@ -1,3 +1,17 @@
+<script>
+import TimingBox from "./timingBlock.vue";
+
+export default {
+  name: 'ScheduleList',
+  props: {
+    dataList: Array,
+  },
+  components: {
+    TimingBox,
+  },
+}
+</script>
+
 <template>
   <section class="meds-list">
     <h3 class="mb-2 text-xl font-bold text-center">Medication Schedule</h3>
@@ -23,26 +37,3 @@
     </div>
   </section>
 </template>
-
-<script>
-import { ref, onMounted, computed, watch } from "vue";
-
-import MedItem from './medItem.vue';
-import TimingBox from "./timingBlock.vue";
-
-const meds_filtered = ref([]);
-
-const filterList = (cat) => {
-  dataList.value = dataList.value.filter(t => t !== cat);
-};
-
-export default {
-  name: 'ScheduleList',
-  props: {
-    dataList: Array,
-  },
-  components: {
-    TimingBox,
-  },
-}
-</script>

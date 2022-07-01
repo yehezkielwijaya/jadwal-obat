@@ -1,8 +1,12 @@
 <script setup>
 import { ref, onMounted, computed, watch } from "vue";
 
-const meds = ref([]);
-const patient_name = ref("tony");
+const meds = ref([
+  {id: 1, content: 'Paracetamol', timing: ['1B','2A'], done: false, createdAt: ''},
+  {id: 2, content: 'Ibuprofen', timing: ['4','3A'], done: false, createdAt: ''},
+  {id: 3, content: 'Paracetamol', timing: ['5','2B'], done: false, createdAt: ''},
+]);
+const patient_name = ref("");
 
 const input_medicine = ref("");
 const input_timing = ref([]);
