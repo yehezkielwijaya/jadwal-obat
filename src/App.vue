@@ -2,8 +2,7 @@
 import { ref, onMounted, computed, watch } from "vue";
 
 const meds = ref([]);
-const patient_name = ref("");
-const meds_filtered = ref([]);
+const patient_name = ref("tony");
 
 const input_medicine = ref("");
 const input_timing = ref([]);
@@ -45,25 +44,23 @@ const addMed = () => {
   input_timing.value = [];
 };
 
-const removeMed = med => {
+const removeMed = (med) => {
   meds.value = meds.value.filter(t => t !== med);
 };
 
 onMounted(() => {
   patient_name.value = JSON.parse(localStorage.getItem("patient_name")) || "";
-  meds.value = JSON.parse(localStorage.getItem("meds")) || {};
+  meds.value =  JSON.parse(localStorage.getItem("meds")) || {};
 });
 </script>
 
 <script>
-import MedItem from './components/medItem.vue';
-import scheduleBox from "./components/scheduleBlock.vue";
+import ScheduleList from "./components/scheduleList.vue";
 
 export default {
   name: 'App',
-  components: {
-    MedItem,
-    scheduleBox,
+  components: { 
+    ScheduleList,
   }
 }
 </script>
@@ -144,66 +141,8 @@ export default {
           class="w-full p-4 my-4 font-medium text-center text-white capitalize bg-indigo-600 rounded-lg hover:opacity-75" />
       </form>
     </section>
-    <div class="py-4 meds-items">
-      <MedItem v-for="medic in meds_sortasc" :key="{ medic }" :done="medic.done" :content="medic.content"
-        :timing="medic.timing" @deleteItem="removeMed(medic)" />
-    </div>
 
-    <section class="meds-list">
-      <h3 class="mb-2 text-xl font-bold text-center">Medication Schedule</h3>
-      <div class="daily-calendar">
-        <div class="grid gap-4 md:grid-cols-2">
-          <scheduleBox title="Morning, Before Eat">
-            <template v-slot:scheduleList>
-              <MedItem v-for="medic in meds_sortasc" :key="{ medic }" :done="medic.done" :content="medic.content"
-                :timing="medic.timing" @deleteItem="removeMed(medic)" />
-            </template>
-          </scheduleBox>
-          <scheduleBox title="Morning, After Eat">
-            <template v-slot:scheduleList>
-              <MedItem v-for="medic in meds_sortasc" :key="{ medic }" :done="medic.done" :content="medic.content"
-                :timing="medic.timing" @deleteItem="removeMed(medic)" />
-            </template>
-          </scheduleBox>
-          <scheduleBox title="Noon, Before Eat">
-            <template v-slot:scheduleList>
-              <MedItem v-for="medic in meds_sortasc" :key="{ medic }" :done="medic.done" :content="medic.content"
-                :timing="medic.timing" @deleteItem="removeMed(medic)" />
-            </template>
-          </scheduleBox>
-          <scheduleBox title="Noon, After Eat">
-            <template v-slot:scheduleList>
-              <MedItem v-for="medic in meds_sortasc" :key="{ medic }" :done="medic.done" :content="medic.content"
-                :timing="medic.timing" @deleteItem="removeMed(medic)" />
-            </template>
-          </scheduleBox>
-          <scheduleBox title="Evening, Before Eat">
-            <template v-slot:scheduleList>
-              <MedItem v-for="medic in meds_sortasc" :key="{ medic }" :done="medic.done" :content="medic.content"
-                :timing="medic.timing" @deleteItem="removeMed(medic)" />
-            </template>
-          </scheduleBox>
-          <scheduleBox title="Evening, After Eat">
-            <template v-slot:scheduleList>
-              <MedItem v-for="medic in meds_sortasc" :key="{ medic }" :done="medic.done" :content="medic.content"
-                :timing="medic.timing" @deleteItem="removeMed(medic)" />
-            </template>
-          </scheduleBox>
-          <scheduleBox title="Bight, Before You Sleep">
-            <template v-slot:scheduleList>
-              <MedItem v-for="medic in meds_sortasc" :key="{ medic }" :done="medic.done" :content="medic.content"
-                :timing="medic.timing" @deleteItem="removeMed(medic)" />
-            </template>
-          </scheduleBox>
-          <scheduleBox title="Only When Needed">
-            <template v-slot:scheduleList>
-              <MedItem v-for="medic in meds_sortasc" :key="{ medic }" :done="medic.done" :content="medic.content"
-                :timing="medic.timing" @deleteItem="removeMed(medic)" />
-            </template>
-          </scheduleBox>
-        </div>
-      </div>
-    </section>
+    <scheduleList :dataList="meds_sortasc" />
   </div>
 </template>
 
@@ -247,26 +186,6 @@ input:checked~.checkbox-icon::after {
 
 .options .labels {
   @apply text-sm;
-}
-
-.meds-item {
-  @apply flex bg-gray-100 py-2 px-4 mb-2 rounded-lg items-center space-x-2;
-}
-
-.meds-item.done .meds-title {
-  @apply line-through opacity-75;
-}
-
-.meds-title {
-  @apply w-full capitalize;
-}
-
-.meds-title input {
-  @apply w-full border-0 outline-1 outline-yellow-400 text-black p-2 bg-transparent;
-}
-
-.meds-item .delete {
-  @apply py-2 px-4 rounded bg-red-500 text-white hover:opacity-75;
 }
 
 .clear-button {

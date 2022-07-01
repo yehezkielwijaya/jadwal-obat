@@ -1,34 +1,54 @@
 <template>
   <div :class="`meds-item ${done && 'done'}`">
+    {{ content }}
     <label>
       <input type="checkbox" v-model="done" />
       <span :class="`checkbox-icon ${done ? 'cleared' : ''}`"></span>
     </label>
 
     <div class="meds-title">
-      {{ content }}
+      {{ content + " " + timing }}
     </div>
     <div class="actions">
-      <button class="delete" @click="deleteItem">X</button>
+      <button class="delete" @click="removeMed">X</button>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'MedItem',
+  name: "MedItem",
   props: {
-    done: String,
+    done: Boolean,
     content: String,
-    timing: String,
+    timing: Array
   },
   deleteItem() {
-    this.$emit('deleteItem');
+    this.$emit("removeMed");
   }
-}
+};
 </script>
 
 <style lang="postcss" scoped>
+.meds-item {
+  @apply flex bg-indigo-50 py-2 px-4 mb-2 rounded-lg items-center space-x-2 shadow;
+}
+
+.meds-item.done {
+  @apply line-through opacity-75;
+}
+
+.meds-title {
+  @apply w-full capitalize;
+}
+
+.meds-title input {
+  @apply w-full border-0 outline-1 outline-yellow-400 text-black p-2 bg-transparent;
+}
+
+.meds-item .delete {
+  @apply py-2 px-4 rounded bg-red-500 text-white hover:opacity-75;
+}
 
 input[type="radio"],
 input[type="checkbox"] {
@@ -48,29 +68,9 @@ input[type="checkbox"] {
   @apply bg-indigo-600 rounded-full w-0 h-0 opacity-0 block;
 }
 
-input:checked~.checkbox-icon::after {
+input:checked ~ .checkbox-icon::after {
   width: 10px;
   height: 10px;
   opacity: 1;
 }
-.meds-item {
-  @apply flex bg-green-100 py-2 px-4 mb-2 rounded-lg items-center space-x-2;
-}
-
-.meds-item.done {
-  @apply line-through opacity-75;
-}
-
-.meds-title {
-  @apply w-full capitalize;
-}
-
-.meds-title input {
-  @apply w-full border-0 outline-1 outline-yellow-400 text-black p-2 bg-transparent;
-}
-
-.meds-item .delete {
-  @apply py-2 px-4 rounded bg-red-500 text-white hover:opacity-75;
-}
-
 </style>
