@@ -1,40 +1,44 @@
 <template>
-  <div :class="`meds-item ${done && 'done'}`">
-    {{ content }}
+  <div :class="`meds-item ${(done && 'done')} ${isDeleted ?'deleted': ''}`">
     <label>
       <input type="checkbox" v-model="done" />
-      <span :class="`checkbox-icon ${done ? 'cleared' : ''}`"></span>
+      <span :class="`checkbox-icon`"></span>
     </label>
 
     <div class="meds-title">
       {{ content + " " + timing }}
     </div>
-    <div class="actions">
-      <button class="delete" @click="removeMed">X</button>
+    <div class="flex space-x-4 actions">
+      <button class="delete" @click="$emit('remove')">X</button>
     </div>
   </div>
 </template>
 
 <script>
+import { ref } from "vue";
+
+const isDeleted = ref(false);
+
 export default {
   name: "MedItem",
   props: {
     done: Boolean,
     content: String,
-    timing: Array
+    timing: Array,
   },
-  deleteItem() {
-    this.$emit("removeMed");
-  }
 };
 </script>
 
 <style lang="postcss" scoped>
 .meds-item {
-  @apply flex bg-indigo-50 py-2 px-4 mb-2 rounded-lg items-center space-x-2 shadow;
+  @apply flex bg-sky-100 py-2 px-3 mb-2 rounded-lg items-center space-x-2 shadow;
 }
 
-.meds-item.done {
+.meds-item.deleted {
+  display: none;
+}
+
+.meds-item.done .meds-title{
   @apply line-through opacity-75;
 }
 
@@ -59,13 +63,13 @@ input[type="checkbox"] {
   width: 21px;
   height: 21px;
   border: 3px solid;
-  @apply flex items-center justify-center rounded-full border-indigo-600 shadow hover:opacity-75;
+  @apply flex items-center justify-center rounded-full border-indigo-500 shadow hover:opacity-75;
 }
 
 .checkbox-icon::after {
   content: "";
   transition: 0.2s ease-in-out;
-  @apply bg-indigo-600 rounded-full w-0 h-0 opacity-0 block;
+  @apply bg-indigo-500 rounded-full w-0 h-0 opacity-0 block;
 }
 
 input:checked ~ .checkbox-icon::after {

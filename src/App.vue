@@ -5,6 +5,8 @@ const meds = ref([
   {id: 1, content: 'Paracetamol', timing: ['1B','2A'], done: false, createdAt: ''},
   {id: 2, content: 'Ibuprofen', timing: ['4','3A'], done: false, createdAt: ''},
   {id: 3, content: 'Paracetamol', timing: ['5','2B'], done: false, createdAt: ''},
+  {id: 4, content: 'God', timing: ['1B','3B'], done: false, createdAt: ''},
+  {id: 5, content: 'Prayer', timing: ['1B','2B'], done: false, createdAt: ''},
 ]);
 const patient_name = ref("");
 
@@ -48,8 +50,9 @@ const addMed = () => {
   input_timing.value = [];
 };
 
-const removeMed = (med) => {
-  meds.value = meds.value.filter(t => t !== med);
+const removeMed = (index) => {
+  return meds.value.splice(index, 1);
+  // meds.value = meds.value.filter(t => t !== med);
 };
 
 onMounted(() => {
@@ -60,11 +63,13 @@ onMounted(() => {
 
 <script>
 import ScheduleList from "./components/scheduleList.vue";
+import MedItem from "./components/medItem.vue"
 
 export default {
   name: 'App',
   components: { 
     ScheduleList,
+    MedItem
   }
 }
 </script>
@@ -145,8 +150,15 @@ export default {
           class="w-full p-4 my-4 font-medium text-center text-white capitalize bg-indigo-600 rounded-lg hover:opacity-75" />
       </form>
     </section>
-
-    <scheduleList :dataList="meds_sortasc" />
+    <!-- <MedItem
+        v-for="(med, index) in meds_sortasc"
+        :key="{ med }"
+        :done="med.done"
+        :content="med.content"
+        :timing="med.timing"
+        @remove="removeMed(index)"
+      /> -->
+    <scheduleList :medList="meds_sortasc" />
   </div>
 </template>
 

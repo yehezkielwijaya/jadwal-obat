@@ -2,14 +2,22 @@
 import TimingBox from "./timingBlock.vue";
 
 export default {
-  name: 'ScheduleList',
+  name: "ScheduleList",
   props: {
-    dataList: Array,
+    medList: Array,
   },
   components: {
-    TimingBox,
+    TimingBox
   },
-}
+  methods: {
+    timingFilter(base, filter) {
+      return base.filter((item) => {
+        return (item.timing.indexOf(filter) >= 0);
+      })
+    }
+  },
+};
+
 </script>
 
 <template>
@@ -17,22 +25,16 @@ export default {
     <h3 class="mb-2 text-xl font-bold text-center">Medication Schedule</h3>
     <div class="daily-calendar">
       <div class="grid gap-4 md:grid-cols-2">
-        <TimingBox :dataList="dataList" title="Morning, Before Eat">
+        <TimingBox :medicList="timingFilter(medList, '1B')" title="Morning, Before Eat"> </TimingBox>
+        <TimingBox :medicList="timingFilter(medList, '1A')" title="Morning, After Eat"> </TimingBox>
+        <TimingBox :medicList="timingFilter(medList, '2B')" title="Noon, Before Eat"> </TimingBox>
+        <TimingBox :medicList="timingFilter(medList, '2A')" title="Noon, After Eat"> </TimingBox>
+        <TimingBox :medicList="timingFilter(medList, '3B')" title="Evening, Before Eat">
         </TimingBox>
-        <TimingBox :dataList="dataList" title="Morning, After Eat">
+        <TimingBox :medicList="timingFilter(medList, '3A')" title="Evening, After Eat"> </TimingBox>
+        <TimingBox :medicList="timingFilter(medList, '4')" title="Night, Before You Sleep">
         </TimingBox>
-        <TimingBox :dataList="dataList" title="Noon, Before Eat">
-        </TimingBox>
-        <TimingBox :dataList="dataList" title="Noon, After Eat">
-        </TimingBox>
-        <TimingBox :dataList="dataList" title="Evening, Before Eat">
-        </TimingBox>
-        <TimingBox :dataList="dataList" title="Evening, After Eat">
-        </TimingBox>
-        <TimingBox :dataList="dataList" title="Night, Before You Sleep">
-        </TimingBox>
-        <TimingBox :dataList="dataList" title="Only When Needed">
-        </TimingBox>
+        <TimingBox :medicList="timingFilter(medList, '5')" title="Only When Needed"> </TimingBox>
       </div>
     </div>
   </section>
