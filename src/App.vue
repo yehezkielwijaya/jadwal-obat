@@ -217,6 +217,6 @@ input:checked~.checkbox-icon::after {
 }
 
 .quote {
-  @apply p-4 bg-sky-50 my-4 rounded italic font-medium text-lg;
+  @apply px-6 py-4 bg-sky-50 my-4 rounded italic font-medium text-lg;
 }
 </style>
