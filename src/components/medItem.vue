@@ -1,23 +1,5 @@
-<template>
-  <div :class="`meds-item ${(done && 'done')} ${isDeleted ?'deleted': ''}`">
-    <label>
-      <input type="checkbox" v-model="done" />
-      <span :class="`checkbox-icon`"></span>
-    </label>
-
-    <div class="meds-title">
-      {{ content + " " + timing }}
-    </div>
-    <div class="flex space-x-4 actions">
-      <button class="delete" @click="$emit('remove')">X</button>
-    </div>
-  </div>
-</template>
-
 <script>
 import { ref } from "vue";
-
-const isDeleted = ref(false);
 
 export default {
   name: "MedItem",
@@ -26,12 +8,38 @@ export default {
     content: String,
     timing: Array,
   },
+  data() {
+    return {
+      isDeleted: false,
+    }
+  },
+  methods: {
+    removeMedicine() {
+      this.isDeleted = true;
+    }
+  }
 };
 </script>
 
+<template>
+  <div class="meds-item" :class="{done: done, deleted: isDeleted}">
+    <label>
+      <input type="checkbox" v-model="done" />
+      <span :class="`checkbox-icon`"></span>
+    </label>
+
+    <div class="meds-title">
+      {{ content }}
+    </div>
+    <div class="flex space-x-4 actions">
+      <button class="delete" @click="removeMedicine">X</button>
+    </div>
+  </div>
+</template>
+
 <style lang="postcss" scoped>
 .meds-item {
-  @apply flex bg-sky-100 py-2 px-3 mb-2 rounded-lg items-center space-x-2 shadow;
+  @apply flex bg-stone-50 py-2 px-3 mb-2 rounded-lg items-center space-x-2 shadow;
 }
 
 .meds-item.deleted {
