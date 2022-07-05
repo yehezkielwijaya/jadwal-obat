@@ -1,17 +1,17 @@
 # Jadwal-obat v.0.2.1
 
-[x] Create Add Form
-[x] Create Name Form
-[x] Create Schedule Box
-[x] Create Item List
-[x] Create Footer
-[x] Able Add item to schedule box
-[x] Able to keep data on Local Storage
-[x] Able to mark as done
-[ ] Able to delete
-[ ] Able to export as good printed A4
-[ ] Able to change language
-[ ] Able to change dark mode
+- [x] Create Add Form
+- [x] Create Name Form
+- [x] Create Schedule Box
+- [x] Create Item List
+- [x] Create Footer
+- [x] Able Add item to schedule box
+- [x] Able to keep data on Local Storage
+- [x] Able to mark as done
+- [ ] Able to delete
+- [ ] Able to export as good printed A4
+- [ ] Able to change language
+- [ ] Able to change dark mode
 
 ## Recommended IDE Setup
 
