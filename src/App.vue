@@ -161,7 +161,7 @@ export default {
     <scheduleList :medList="meds_sortasc" />
     <section class="footer">
       <div class="quote"> “A joyful heart is good medicine, but a broken spirit dries up the bones.” - Proverbs 17:22</div>
-      <small>Created with love by <a href="http://yehezkielwijaya.vercel.app" target="_blank" >Yehezkiel Wijaya</a></small>
+      <small>Created with love by <a href="http://yehezkielwijaya.vercel.app" target="_blank" class="font-medium text-yellow-700">Yehezkiel Wijaya</a></small>
     </section>
   </div>
 </template>
@@ -217,6 +217,6 @@ input:checked~.checkbox-icon::after {
 }
 
 .quote {
-  @apply px-6 py-4 bg-sky-50 my-4 rounded italic font-medium text-lg;
+  @apply px-6 py-4 bg-amber-50 my-4 rounded italic font-medium text-lg;
 }
 </style>
