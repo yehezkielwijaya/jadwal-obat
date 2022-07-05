@@ -12,12 +12,27 @@ const input_timing = ref([]);
 
 const add_modal_isOpen = ref(false);
 
+const meds_sortasc = computed(() => meds.value.sort((a, b) => {
+  return a.createdAt - b.createdAt;
+}));
+
+const modified_array = computed(() =>
+  meds_sortasc.value.flatMap(({ timing, ...r }) =>
+    timing.map((t) => ({ ...r, timing: [t] }))
+  )
+);
+
 watch(patient_name, newVal => {
   localStorage.setItem("patient_name", newVal);
 });
 
 watch(meds, newVal => {
     localStorage.setItem("meds",  JSON.stringify(newVal));
+  }, { deep: true }
+);
+
+watch(modified_array, newVal => {
+    localStorage.setItem("modified_array",  JSON.stringify(newVal));
   }, { deep: true }
 );
 
@@ -37,21 +52,6 @@ const addMed = () => {
   input_timing.value = [];
 };
 
-const removeMed = (index) => {
-  return meds.value.splice(index, 1);
-  // meds.value = meds.value.filter(t => t !== med);
-};
-
-const meds_sortasc = computed(() => meds.value.sort((a, b) => {
-  return a.createdAt - b.createdAt;
-}));
-
-const modified_array = computed(() =>
-  meds_sortasc.value.flatMap(({ timing, ...r }) =>
-    timing.map((t) => ({ ...r, timing: [t] }))
-  )
-);
-
 onMounted(() => {
   patient_name.value = localStorage.getItem("patient_name") || "";
   meds.value =  JSON.parse(localStorage.getItem("meds")) || [];
@@ -65,7 +65,21 @@ export default {
   name: 'App',
   components: { 
     ScheduleList,
-  }
+  },
+  methods: {
+    deleteItem(content, timing) {
+      for(let i = 0; i < this.modified_array.length; i++) {
+        if(content === this.modified_array[i].content) {
+          return this.modified_array.splice(i, 1);
+        }
+      }
+    }
+  },
+  provide: function() {
+    return {
+      deleteItem: this.deleteItem,
+    };
+  },
 }
 </script>
 
@@ -83,8 +97,6 @@ export default {
         </button>
       </div>
     </section>
-{{modified_array}}
-
     <section
       :class="`fixed top-0 left-0 w-full overflow-hidden flex justify-center items-center bg-slate-900 bg-opacity-90 ${add_modal_isOpen ? 'h-screen p-8' : 'h-0'}`">
       <button @click="add_modal_isOpen = false" class="absolute add-medicine top-4 right-4">X</button>

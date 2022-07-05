@@ -8,14 +8,16 @@ export default {
     content: String,
     timing: Array,
   },
+  inject: ["deleteItem"],
   data() {
     return {
       isDeleted: false,
     }
   },
   methods: {
-    removeMedicine() {
+    deleteMed(content, timing) {
       this.isDeleted = true;
+      this.deleteItem(content, timing);
     }
   }
 };
@@ -32,7 +34,7 @@ export default {
       {{ content }}
     </div>
     <div class="flex space-x-4 actions">
-      <button class="delete" @click="removeMedicine">X</button>
+      <button class="delete" @click="deleteMed(content, timing)">X</button>
     </div>
   </div>
 </template>

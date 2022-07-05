@@ -10,6 +10,14 @@ export default {
   components: {
     MedItem,
   },
+  data() {
+    return {
+      tempArray: []
+    }
+  },
+  computed() {
+    this.tempArray = this.medicList
+  },
   methods: {
     getClass() {
       return {
@@ -22,6 +30,12 @@ export default {
         'night': this.name === "Nig",
         'own': this.name === "Own",
       }
+    },
+    removeMed(index) {
+      console.log(this.medicList, " - before");
+      this.tempArray = this.medicList.splice(index,1);
+      console.log(this.medicList, " - after");
+
     }
   },
 };
@@ -40,7 +54,7 @@ export default {
         :done="med.done"
         :content="med.content"
         :timing="med.timing"
-        @remove="removeMed(index)"
+        @removeEmit="removeMed(index)"
       />
     </div>
   </div>

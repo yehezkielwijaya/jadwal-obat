@@ -8,7 +8,7 @@
 - [x] Able Add item to schedule box
 - [x] Able to keep data on Local Storage
 - [x] Able to mark as done
-- [-] Able to delete
+- [x] Able to delete
 - [ ] Able to mark all as done
 - [ ] Able to export as good printed A4
 - [ ] Able to change language
