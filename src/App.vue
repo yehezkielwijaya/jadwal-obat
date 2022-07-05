@@ -54,7 +54,7 @@ const modified_array = computed(() =>
 
 onMounted(() => {
   patient_name.value = localStorage.getItem("patient_name") || "";
-  meds.value =  JSON.parse(localStorage.getItem("meds")) || {};
+  meds.value =  JSON.parse(localStorage.getItem("meds")) || [];
 });
 </script>
 
@@ -83,7 +83,7 @@ export default {
         </button>
       </div>
     </section>
-{{meds.value}}
+{{modified_array}}
 
     <section
       :class="`fixed top-0 left-0 w-full overflow-hidden flex justify-center items-center bg-slate-900 bg-opacity-90 ${add_modal_isOpen ? 'h-screen p-8' : 'h-0'}`">
